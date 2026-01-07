@@ -28,7 +28,7 @@ contract filmFavoriter {
 
     //-Event--
     event RostLagd(address valjare, string film);
-    event OmrostningStartad(uint12 slutTid);
+    event OmrostningStartad(uint16 slutTid);
     event VinnarePresenterad(string vinnandeFilm, uint16 antalRoster);
 
     //-Custom error-- 
