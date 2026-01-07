@@ -48,3 +48,35 @@ contract filmFavoriter {
         require(block.timestamp < omrostning.slutTid, "Tiden har gatt ut");
     }
 }
+
+
+
+
+
+
+Hani- påbörjat första delen
+
+pragma solidity 0.8.31;
+
+contract FilmFavoriter {
+    address public owner;  
+    
+    struct Vote {
+        string titel;
+        uint vote; 
+        address delegate;
+    }
+    
+    Vote[5] public votes;
+    uint public voteCount = 0;  
+    mapping(address => Vote[5]) public polls;  
+    
+    constructor() {  
+        owner = msg.sender;
+    }
+    
+    function createPoll() public {  
+        
+    }
+}
+}
