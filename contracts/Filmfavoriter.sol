@@ -16,12 +16,33 @@ contract filmFavoriter {
   struct Omrostning {
     string title;
     address skapare;
-    uint8 slutTid;
+    uint16 slutTid;
     status nuvarandeStatus;
     string[] filmAlternativ;
     mapping(string => uint8) rostAntal;
     mapping(address => bool) harRostat;
   }
   //-state variabel--
+    Omrostning public omrostning;
+    address public owner;
 
+    //-Event--
+    event RostLagd(address valjare, string film);
+    event OmrostningStartad(uint12 slutTid);
+    event VinnarePresenterad(string vinnandeFilm, uint16 antalRoster);
+
+    //-Custom error-- 
+    error EndastSkapare();
+    error RedanRostat();
+    error OmrostningEjAktiv();
+
+    //--Modifiers---
+    modifier endastSkapare() {
+        if (msg.sender != omrostning.skapare) revert EndastSkapare();
+        _;
+    }
+
+    modifier arPagaende() {
+        require(block.timestamp < omrostning.slutTid, "Tiden har gatt ut");
+    }
 }
