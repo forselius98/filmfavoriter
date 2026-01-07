@@ -54,7 +54,7 @@ contract filmFavoriter {
 
 
 
-Hani- påbörjat första delen
+//Hani- påbörjat första delen
 
 pragma solidity 0.8.31;
 
