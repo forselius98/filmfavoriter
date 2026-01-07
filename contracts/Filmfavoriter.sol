@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
-pragma solidity 0.8.31;
+pragma solidity 0.8.31; 
 
-//Kontraktet ska innehåll följande element:
+//--Utveckla ett kontrakt där användare kan rösta på sin favoritfilm från en lista. Röstningen ska vara öppen under en viss tid, och därefter räknas rösterna för att utse en vinnare. Kontraktet ska ha funktioner för att skapa en omröstning, starta röstningen, lägga en röst, och räkna rösterna. När en röstning är avslutad ska den vinnande filmen presenteras. Varje omröstning ska vara kopplad till den användare som skapade den.--//
+
+//[]Kontraktet ska innehåll följande element:
 // Minst en struct eller enum
 // Minst en mapping eller array
 // En constructor
@@ -11,7 +13,7 @@ pragma solidity 0.8.31;
 // Minst en require, en assert, och en revert
 // En fallback och/eller receive funktion
 
-contract filmFavoriter {
+contract filmFavoriter { 
   
   struct Omrostning {
     string title;
@@ -19,7 +21,7 @@ contract filmFavoriter {
     uint16 slutTid;
     status nuvarandeStatus;
     string[] filmAlternativ;
-    mapping(string => uint8) rostAntal;
+    mapping(string => uint16) rostAntal;
     mapping(address => bool) harRostat;
   }
   //-state variabel--
