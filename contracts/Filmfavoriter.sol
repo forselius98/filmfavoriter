@@ -19,7 +19,6 @@ contract filmFavoriter {
     string title;
     address skapare;
     uint16 slutTid;
-    status nuvarandeStatus;
     string[] filmAlternativ;
     mapping(string => uint16) rostAntal;
     mapping(address => bool) harRostat;
@@ -48,6 +47,14 @@ contract filmFavoriter {
         require(block.timestamp < omrostning.slutTid, "Tiden har gatt ut");
         require(omrostning.nuvarandeStatus = Status.Pagaende, "Omrostning ar inte aktiv");
     }
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    function filmAlternativ(string memory) public {
+        
+    }
 }
 
 
@@ -62,6 +69,14 @@ pragma solidity 0.8.31;
 contract FilmFavoriter {
     address public owner;  
     
+    //--  struct Omrostning {
+    string title;
+    address skapare;
+    uint16 slutTid;
+    string[] filmAlternativ;
+    mapping(string => uint16) rostAntal;
+    mapping(address => bool) harRostat;
+  }
     struct Vote {
         string titel;
         uint vote; 
@@ -79,5 +94,44 @@ contract FilmFavoriter {
     function createPoll() public {  
         
     }
-}
-}
+
+//------Elli--------
+    // SPDX-License-Identifier: SEE LICENSE IN LICENSE
+    pragma solidity 0.8.31;
+
+    contract movieF1 {
+        struct reVote {
+        string title;
+        uint vote;
+        address delegate;
+        bool voted;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//------Hani--------
+    // SPDX-License-Identifier: SEE LICENSE IN LICENSE
+    pragma solidity 0.8.31;
+
+    contract movieF1 {
+        struct reVote {
+        string title;
+        uint vote;
+        address delegate;
+        bool voted;
+        }
+    }
