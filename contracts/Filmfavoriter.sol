@@ -46,5 +46,6 @@ contract filmFavoriter {
 
     modifier arPagaende() {
         require(block.timestamp < omrostning.slutTid, "Tiden har gatt ut");
+        require(omrostning.nuvarandeStatus = Status.Pagaende, "Omrostning ar inte aktiv");
     }
 }
