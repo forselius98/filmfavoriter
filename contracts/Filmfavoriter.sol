@@ -124,14 +124,89 @@ contract FilmFavoriter {
 
 
 //------Hani--------
-    // SPDX-License-Identifier: SEE LICENSE IN LICENSE
-    pragma solidity 0.8.31;
+   // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.31;
 
-    contract movieF1 {
-        struct reVote {
-        string title;
-        uint vote;
-        address delegate;
-        bool voted;
-        }
+contract FilmFavoriter {
+    address public owner;  
+    
+    enum Status { Inactive, Active, Ended }
+    
+    struct Poll {
+        string[] movies;
+        uint256[] votes; 
+        uint256 endTime;
+        Status status;
+        address owner;
     }
+    
+    mapping(address => Poll) public userPolls;
+    
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier isOwner() {
+    require(msg.sender == owner, "Caller is not owner");
+    _;
+
+}
+
+//Event
+event PollStarted(address indexed  creator, string[] movies);
+event VoteCast(address indexed voter, uint256 movieIndex);
+event PollEnded(address indexed creator, uint256 winnerIndex);
+
+//Error
+error PollNotActive(string status);  // ← STOPP-KNAPPEN!
+
+//Function
+    function createPoll(string[] memory _movies, uint256 _duration) public isOwner {
+        require(_movies.length >= 2, "Minst 2 filmer");  
+        uint256[] memory emptyVotes = new uint256[](_movies.length);
+        userPolls[msg.sender] = Poll({
+            movies: _movies,
+            votes: emptyVotes,
+            endTime: block.timestamp + _duration,
+            status: Status.Active,
+            owner: msg.sender
+        });
+        emit PollStarted(msg.sender, _movies);
+    }
+
+    function vote(uint256 _movieIndex) public {
+        Poll storage poll = userPolls[msg.sender];
+        if (poll.status != Status.Active) {
+            revert PollNotActive("Inactive");
+        }
+        require(block.timestamp < poll.endTime, "Poll slut");
+        require(_movieIndex < poll.movies.length, "Fel film!");
+        poll.votes[_movieIndex] += 1;
+        emit VoteCast(msg.sender, _movieIndex);
+    }
+
+    function endPoll() public isOwner {
+        Poll storage poll = userPolls[msg.sender];
+        require(block.timestamp >= poll.endTime, "Poll inte slut");
+        assert(poll.owner == msg.sender);
+        poll.status = Status.Ended;
+        emit PollEnded(msg.sender, 0);
+    }
+
+    function getWinnerIndex(address _user) public view returns (uint256) {
+        Poll storage poll = userPolls[_user];
+        uint256 winner = 0;
+        for (uint256 i = 1; i < poll.votes.length; i++) {
+            if (poll.votes[i] > poll.votes[winner]) {
+                winner = i;
+            }
+        }
+        return winner;
+    }
+
+    fallback() external payable {
+        revert("Inga fallback calls");
+    }
+
+    receive() external payable {}
+}
