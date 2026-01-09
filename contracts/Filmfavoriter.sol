@@ -100,14 +100,69 @@ contract FilmFavoriter {
     pragma solidity 0.8.31;
 
     contract movieF1 {
-        struct reVote {
-        string title;
-        uint vote;
-        address delegate;
-        bool voted;
+        struct Voter {
+        bool voted; //Om sant, har personen redan röstat
+        uint vote; // Index för den valda filmen 
+        }
+
+        struct Movie {
+            bytes32 name; //Kort namn för filmen 
+            uint voteCount; //Antal under tid
+        }
+
+        //State variabler
+        address public creator;
+        uint256 public votingDeadline;
+        bool public votingStarted;
+
+        mapping(address => Voter) public voters;
+        Movie[] public movies;
+
+        // --- Custom Errors ---
+        error OnlyCreator();
+        error AlreadyVoted();
+        error VotingNotActive();
+
+        // --- Events ---
+        event VoteCast(address indexed voter, uint movieIndex);
+        event VotingOpened(uint256 deadline);
+
+        // --- Custom Modifier ---
+        modifier onlyCreator() {
+        if (msg.sender != creator) revert OnlyCreator();
+        _;
+    }
+        constructor(bytes32[] memory movieNames) {
+        creator = msg.sender;
+        currentStatus = Status.Skapad;
+
+        for (uint i = 0; i < movieNames.length; i++) {
+            movies.push(Movie({
+                name: movieNames[i],
+                voteCount: 0
+            }));
         }
     }
 
+    function startVoting(uint durationInMinutes) external onlyCreator {
+        require(currentStatus == Status.Skapad, "Already started");
+        
+        currentStatus = Status.Aktiv;
+        votingDeadline = block.timestamp + (durationInMinutes * 1 minutes);
+        
+        emit VotingOpened(votingDeadline);
+    }
+
+    function vote(uint movieIndex) external {
+        if (currentStatus != Status.Aktiv || block.timestamp > votingDeadline) {
+            revert VotingNotActive();
+        }
+        if (voters[msg.sender].voted) {
+            revert AlreadyVoted();
+        }
+
+    }
+ }
 
 
 
